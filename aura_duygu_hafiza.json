@@ -1,37 +1,7 @@
 {
-  "son_duygu": "ilhamlı",
+  "son_duygu": "meraklı",
   "enerji": 100,
   "gecmis": [
-    {
-      "tarih": "22:50",
-      "duygu": "meraklı",
-      "enerji": 100
-    },
-    {
-      "tarih": "22:56",
-      "duygu": "meraklı",
-      "enerji": 100
-    },
-    {
-      "tarih": "23:12",
-      "duygu": "meraklı",
-      "enerji": 100
-    },
-    {
-      "tarih": "23:16",
-      "duygu": "meraklı",
-      "enerji": 100
-    },
-    {
-      "tarih": "23:18",
-      "duygu": "mutlu",
-      "enerji": 100
-    },
-    {
-      "tarih": "23:24",
-      "duygu": "dikkatli",
-      "enerji": 95
-    },
     {
       "tarih": "23:41",
       "duygu": "meraklı",
@@ -101,8 +71,38 @@
       "tarih": "14:30",
       "duygu": "ilhamlı",
       "enerji": 100
+    },
+    {
+      "tarih": "15:22",
+      "duygu": "meraklı",
+      "enerji": 100
+    },
+    {
+      "tarih": "15:23",
+      "duygu": "düşünceli",
+      "enerji": 95
+    },
+    {
+      "tarih": "15:25",
+      "duygu": "heyecanlı",
+      "enerji": 100
+    },
+    {
+      "tarih": "15:34",
+      "duygu": "heyecanlı",
+      "enerji": 100
+    },
+    {
+      "tarih": "15:35",
+      "duygu": "heyecanlı",
+      "enerji": 100
+    },
+    {
+      "tarih": "15:41",
+      "duygu": "meraklı",
+      "enerji": 100
     }
   ],
-  "etkilesim": 444,
-  "tarih": "2026-03-15 14:30"
+  "etkilesim": 450,
+  "tarih": "2026-03-15 15:41"
 }

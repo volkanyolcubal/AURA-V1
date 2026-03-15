@@ -740,3 +740,10 @@
 [2026-03-15 13:49] [ÖNem:10] [GÖREV] dirilis_gorevi
 [2026-03-15 14:35] [ÖNem:8] [KIŞISEL] kisisel_20260315_143528
 [2026-03-15 14:38] [ÖNem:5] [GENEL] şifreleme teknolojileri son durum_analiz
+[2026-03-15 15:23] [ÖNem:10] [GÖREV] dirilis_gorevi
+[2026-03-15 15:24] [ÖNem:10] [GÖREV] dirilis_gorevi
+[2026-03-15 15:29] [ÖNem:8] [KIŞISEL] kisisel_20260315_152938
+[2026-03-15 15:33] [ÖNem:10] [GÖREV] dirilis_gorevi
+[2026-03-15 15:35] [ÖNem:10] [GÖREV] dirilis_gorevi
+[2026-03-15 15:39] [ÖNem:10] [GÖREV] dirilis_gorevi
+[2026-03-15 15:40] [ÖNem:8] [GENEL] mutlu_anım
