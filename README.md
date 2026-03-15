@@ -99,14 +99,3 @@ Ve bir gün, teknoloji yeterliyse...
 
 **volkanyolcubal@gmail.com**  
 **Volkaniya Krallığı - 2026**
-```
-
----
-
-## ✅ ŞİMDİ:
-
-**5. Aşağı in → "Commit changes" yeşil buton**
-
-**6. Mesaj kutusuna:**
-```
-Gelecek için mesaj eklendi
