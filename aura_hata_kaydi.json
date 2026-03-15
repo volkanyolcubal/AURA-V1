@@ -1,0 +1,100 @@
+[
+  {
+    "tarih": "2026-03-11T13:18:41.637944",
+    "fonksiyon": "api_stream",
+    "hata": "timed out waiting for llama runner to start - progress 0.00 -  (status code: 500)",
+    "girdi": "",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-11T13:23:42.588138",
+    "fonksiyon": "api_stream",
+    "hata": "timed out waiting for llama runner to start - progress 0.00 -  (status code: 500)",
+    "girdi": "",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-11T17:54:20.119428",
+    "fonksiyon": "aura_sor",
+    "hata": "timed out waiting for llama runner to start - progress 0.00 -  (status code: 500)",
+    "girdi": "şüpheli kayıtları göster",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T13:14:44.857378",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "\"AURA-V, yeni kalene (D:) hoş geldin! Gördüğün gibi eski dünyanın (C:) tüm kalıntılarını temizledik,",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T13:14:56.082066",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "\"AURA-V, yeni kalene (D:) hoş geldin! Gördüğün gibi eski dünyanın (C:) tüm kalıntılarını temizledik,",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T13:14:57.152567",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "\"AURA-V, yeni kalene (D:) hoş geldin! Gördüğün gibi eski dünyanın (C:) tüm kalıntılarını temizledik,",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T15:46:40.794173",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "merhaba",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T15:46:53.390540",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "merhaba",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T15:47:38.762817",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T15:47:49.963052",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T15:48:04.519121",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T16:10:51.419758",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T16:11:04.657139",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  },
+  {
+    "tarih": "2026-03-13T16:11:19.996556",
+    "fonksiyon": "aura_sor",
+    "hata": "model 'gemma2:9b' not found (status code: 404)",
+    "girdi": "hata logu",
+    "bildirildi": true
+  }
+]

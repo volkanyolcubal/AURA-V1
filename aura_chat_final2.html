@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AURA-V</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030208;
+  --surface: #080618;
+  --surface2: #0e0b24;
+  --border: #ffffff0c;
+  --accent: #c8193a;
+  --accent2: #8b35d6;
+  --accent3: #d4a843;
+  --glow: #c8193a33;
+  --glow2: #8b35d622;
+  --text: #ece8f8;
+  --text2: #6a6090;
+  --text3: #3a3460;
+  --user-bg: #0a0820;
+  --aura-bg: #060412;
+  --input-bg: #0d0a22;
+  --radius: 18px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height:100%; width:100%;
+  background:var(--bg);
+  font-family:'Raleway', sans-serif;
+  color:var(--text);
+  overflow:hidden;
+}
+
+/* ── KOZMIK ARKA PLAN ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, #c8193a1a 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 0% 80%, #8b35d618 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 100% 60%, #d4a84312 0%, transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, #ffffff03 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, #ffffff03 60px);
+  pointer-events:none;
+}
+
+/* Yıldızlar */
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #fff5, transparent),
+    radial-gradient(1px 1px at 90% 10%, #fff3, transparent),
+    radial-gradient(1.5px 1.5px at 30% 70%, #c8193a88, transparent),
+    radial-gradient(1px 1px at 70% 80%, #fff4, transparent),
+    radial-gradient(1px 1px at 50% 50%, #8b35d666, transparent),
+    radial-gradient(1px 1px at 20% 90%, #fff3, transparent),
+    radial-gradient(2px 2px at 80% 40%, #d4a84344, transparent),
+    radial-gradient(1px 1px at 60% 25%, #fff3, transparent),
+    radial-gradient(1px 1px at 40% 60%, #c8193a44, transparent),
+    radial-gradient(1px 1px at 15% 45%, #fff2, transparent);
+  animation:stars 25s linear infinite;
+}
+@keyframes stars { to { transform:translateY(-30px); } }
+
+/* Köşe çerçeveleri */
+#frame-tl, #frame-tr, #frame-bl, #frame-br {
+  position:fixed; z-index:2; pointer-events:none; width:50px; height:50px;
+}
+#frame-tl { top:6px; left:6px; border-top:1px solid #c8193a66; border-left:1px solid #c8193a66; border-radius:6px 0 0 0; }
+#frame-tr { top:6px; right:6px; border-top:1px solid #8b35d666; border-right:1px solid #8b35d666; border-radius:0 6px 0 0; }
+#frame-bl { bottom:6px; left:6px; border-bottom:1px solid #d4a84355; border-left:1px solid #d4a84355; border-radius:0 0 0 6px; }
+#frame-br { bottom:6px; right:6px; border-bottom:1px solid #c8193a66; border-right:1px solid #c8193a66; border-radius:0 0 6px 0; }
+
+#app {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column;
+  height:100dvh; max-width:500px;
+  margin:0 auto;
+}
+
+/* ── HEADER ── */
+#header {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 18px 12px;
+  background:linear-gradient(180deg, #060412f0 0%, transparent 100%);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0; position:relative;
+}
+#header::after {
+  content:'';
+  position:absolute; bottom:-1px; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent 5%, #c8193a55 30%, #8b35d655 70%, transparent 95%);
+}
+
+/* Avatar — dönen taç halkası */
+#avatar-wrap {
+  position:relative; width:44px; height:44px; flex-shrink:0;
+}
+#avatar-ring {
+  position:absolute; inset:-2px; border-radius:14px;
+  background:conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+  animation:ringRotate 3s linear infinite;
+  border-radius:15px;
+}
+@keyframes ringRotate { to { transform:rotate(360deg); } }
+#avatar {
+  position:relative; z-index:1;
+  width:44px; height:44px; border-radius:13px;
+  background:linear-gradient(135deg, #150a30, #080416);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+/* AURA tacı SVG */
+.crown-svg { width:26px; height:26px; }
+
+#header-info { flex:1; min-width:0; }
+#header-name {
+  font-family:'Cinzel', serif;
+  font-size:15px; font-weight:900;
+  background:linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  letter-spacing:2.5px;
+}
+#header-sub {
+  font-family:'Share Tech Mono', monospace;
+  font-size:9px; color:var(--text3);
+  letter-spacing:2px; margin-top:1px; text-transform:uppercase;
+}
+#header-status {
+  font-size:11px; color:var(--text2);
+  display:flex; align-items:center; gap:5px; margin-top:3px;
+  font-family:'Share Tech Mono', monospace; letter-spacing:0.5px;
+}
+#status-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:#2ecc71; box-shadow:0 0 7px #2ecc7199;
+  transition:all 0.3s;
+}
+#status-dot.thinking {
+  background:var(--accent); box-shadow:0 0 10px var(--accent);
+  animation:pulse 0.8s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+#header-actions { display:flex; gap:8px; }
+.hbtn {
+  width:34px; height:34px; border-radius:10px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text2); font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.2s;
+}
+.hbtn:active { transform:scale(0.9); }
+
+/* ── MESAJLAR ── */
+#messages {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:16px 14px 8px;
+  display:flex; flex-direction:column; gap:12px;
+  scroll-behavior:smooth;
+}
+#messages::-webkit-scrollbar { width:2px; }
+#messages::-webkit-scrollbar-thumb { background:#ffffff15; border-radius:1px; }
+
+.msg-row {
+  display:flex; gap:8px; align-items:flex-end;
+  animation:fadeUp 0.28s cubic-bezier(0.34,1.4,0.64,1) both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px) scale(0.96); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+.msg-row.user { flex-direction:row-reverse; }
+
+/* Mesaj avatarları — taç ikonlu */
+.msg-avatar {
+  width:30px; height:30px; border-radius:9px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.msg-row.aura .msg-avatar {
+  background:linear-gradient(135deg, #150a30, #080416);
+  border:1px solid #c8193a33;
+  box-shadow:0 0 10px #c8193a22;
+}
+.msg-row.user .msg-avatar {
+  background:linear-gradient(135deg, #0a1030, #060818);
+  border:1px solid #ffffff15;
+}
+.avatar-crown { width:17px; height:17px; }
+
+.msg-wrap { display:flex; flex-direction:column; max-width:82%; }
+
+.bubble {
+  padding:11px 15px;
+  border-radius:var(--radius);
+  font-size:14.5px; line-height:1.6;
+  word-break:break-word;
+  font-weight:400; letter-spacing:0.1px;
+  position:relative;
+}
+
+.msg-row.aura .bubble {
+  background:linear-gradient(135deg, #0c0820ee, #060412ee);
+  border:1px solid #ffffff0a;
+  border-bottom-left-radius:4px;
+  color:var(--text);
+  backdrop-filter:blur(16px);
+  box-shadow:0 4px 24px #00000055, inset 0 1px 0 #ffffff06;
+}
+.msg-row.aura .bubble::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, var(--accent)55, var(--accent2)44, transparent);
+  border-radius:var(--radius) var(--radius) 0 0;
+}
+
+.msg-row.user .bubble {
+  background:linear-gradient(135deg, #0e0a28ee, #08061aee);
+  border:1px solid #ffffff0d;
+  border-bottom-right-radius:4px;
+  color:var(--text);
+  backdrop-filter:blur(16px);
+  box-shadow:0 4px 24px #00000055, inset 0 1px 0 #ffffff06;
+}
+.msg-row.user .bubble::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, #4466cc44, #4466cc44);
+  border-radius:var(--radius) var(--radius) 0 0;
+}
+
+.bubble .cmd {
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px; color:var(--accent3);
+  background:#d4a84318; padding:2px 7px;
+  border-radius:5px; display:inline-block;
+  border:1px solid #d4a84325;
+}
+
+.msg-time {
+  font-family:'Share Tech Mono', monospace;
+  font-size:10px; color:var(--text3);
+  margin-top:4px; padding:0 4px; letter-spacing:0.3px;
+}
+.msg-row.aura .msg-time { text-align:left; }
+.msg-row.user .msg-time { text-align:right; }
+
+.typing-cursor {
+  display:inline-block; width:2px; height:13px;
+  vertical-align:middle; background:var(--accent);
+  margin-left:2px; animation:blink 0.7s infinite; border-radius:1px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* Typing dots */
+.typing-bubble {
+  background:linear-gradient(135deg, #0c0820ee, #060412ee);
+  border:1px solid #ffffff0a; border-bottom-left-radius:4px;
+  padding:13px 17px; display:flex; gap:6px; align-items:center;
+  border-radius:var(--radius); backdrop-filter:blur(16px);
+}
+.typing-bubble span {
+  width:7px; height:7px; border-radius:50%;
+  animation:bounce 1.3s infinite;
+}
+.typing-bubble span:nth-child(1) { background:var(--accent); animation-delay:0s; }
+.typing-bubble span:nth-child(2) { background:var(--accent2); animation-delay:0.22s; }
+.typing-bubble span:nth-child(3) { background:var(--accent3); animation-delay:0.44s; }
+@keyframes bounce {
+  0%,60%,100% { transform:translateY(0); opacity:0.4; }
+  30% { transform:translateY(-7px); opacity:1; }
+}
+
+/* ── HIZLI KOMUTLAR ── */
+#quick {
+  padding:7px 14px;
+  display:flex; gap:7px; overflow-x:auto; flex-shrink:0;
+  cursor:grab;
+}
+#quick::-webkit-scrollbar { display:none; }
+#quick.grabbing { cursor:grabbing; }
+.qbtn {
+  flex-shrink:0;
+  padding:5px 13px; border-radius:20px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text2);
+  font-family:'Share Tech Mono', monospace;
+  font-size:11px; letter-spacing:0.5px;
+  cursor:pointer; white-space:nowrap; transition:all 0.2s;
+}
+.qbtn:hover { border-color:#c8193a44; color:#c8193a99; }
+.qbtn:active { background:#c8193a18; border-color:var(--accent); color:var(--accent); transform:scale(0.95); }
+
+/* ── INPUT ── */
+#inputbar {
+  padding:10px 12px 18px;
+  background:linear-gradient(0deg, #030208 55%, transparent 100%);
+  flex-shrink:0;
+}
+#input-inner {
+  display:flex; align-items:flex-end; gap:9px;
+  background:var(--input-bg);
+  border:1px solid var(--border);
+  border-radius:22px; padding:9px 9px 9px 17px;
+  transition:all 0.3s; position:relative;
+}
+#input-inner::before {
+  content:''; position:absolute; top:0; left:18px; right:18px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent);
+  transition:all 0.3s;
+}
+#input-inner:focus-within {
+  border-color:#c8193a44;
+  box-shadow:0 0 0 3px #c8193a0e, 0 4px 20px #c8193a15;
+}
+#input-inner:focus-within::before {
+  background:linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  opacity:0.7;
+}
+#msg-input {
+  flex:1; background:none; border:none; outline:none;
+  color:var(--text); font-size:15px; font-family:'Raleway', sans-serif;
+  font-weight:500; resize:none; max-height:120px; line-height:1.4; padding:2px 0;
+}
+#msg-input::placeholder { color:var(--text3); }
+
+#send-btn {
+  width:39px; height:39px; border-radius:13px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 3px 16px var(--glow);
+  transition:all 0.2s; position:relative; overflow:hidden;
+}
+#send-btn::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, #ff4060, #b06aff);
+  opacity:0; transition:opacity 0.2s;
+}
+#send-btn:hover::after { opacity:1; }
+#send-btn:active { transform:scale(0.88); }
+#send-btn svg { width:17px; height:17px; fill:#fff; position:relative; z-index:1; }
+
+/* ── BAĞLANTI BANNER ── */
+#conn-banner {
+  display:none; padding:8px 16px;
+  background:#c8193a18; border-top:1px solid #c8193a44;
+  font-family:'Share Tech Mono', monospace;
+  font-size:11px; color:var(--accent); text-align:center;
+  flex-shrink:0; letter-spacing:0.5px;
+}
+#conn-banner.show { display:block; }
+
+/* ── AYARLAR MODAL ── */
+#settings-modal {
+  display:none; position:fixed; inset:0; z-index:100;
+  background:#000000cc; backdrop-filter:blur(6px);
+  align-items:flex-end; justify-content:center;
+}
+#settings-modal.open { display:flex; }
+#settings-sheet {
+  width:100%; max-width:500px;
+  background:linear-gradient(160deg, #0e0a24, #060412);
+  border-radius:24px 24px 0 0;
+  border:1px solid var(--border); border-bottom:none;
+  padding:26px 20px 40px;
+  animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);
+  box-shadow:0 -16px 50px #c8193a1a;
+}
+@keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+#settings-sheet h3 {
+  font-family:'Cinzel', serif; font-size:13px; font-weight:700;
+  background:linear-gradient(90deg, var(--accent3), var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:20px; text-align:center; letter-spacing:3px;
+}
+.setting-row {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 0; border-bottom:1px solid var(--border);
+}
+.setting-row label { flex:1; font-size:13px; color:var(--text2); letter-spacing:0.3px; }
+.setting-row input[type=text] {
+  flex:1; background:var(--surface2);
+  border:1px solid var(--border); border-radius:10px;
+  padding:9px 12px; color:var(--text);
+  font-size:14px; font-family:'Raleway', sans-serif; outline:none;
+  transition:border-color 0.2s;
+}
+.setting-row input:focus { border-color:#c8193a44; }
+#save-settings {
+  width:100%; margin-top:20px; padding:13px; border-radius:14px;
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  border:none; color:#fff;
+  font-family:'Cinzel', serif; font-size:13px; font-weight:700;
+  cursor:pointer; letter-spacing:2px; text-transform:uppercase;
+  transition:all 0.2s; box-shadow:0 4px 18px var(--glow);
+}
+#save-settings:active { opacity:0.85; }
+</style>
+</head>
+<body>
+
+<div id="frame-tl"></div>
+<div id="frame-tr"></div>
+<div id="frame-bl"></div>
+<div id="frame-br"></div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div id="avatar-wrap">
+      <div id="avatar-ring"></div>
+      <div id="avatar">
+        <!-- Kraliçe tacı -->
+        <svg class="crown-svg" viewBox="0 0 32 32" fill="none">
+          <path d="M4 24h24v3H4z" fill="url(#cg1)"/>
+          <path d="M4 24L8 10l8 8 8-12 4 14" fill="none" stroke="url(#cg1)" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="16" cy="8" r="2.5" fill="#d4a843"/>
+          <circle cx="28" cy="12" r="1.8" fill="#c8193a"/>
+          <circle cx="4" cy="14" r="1.8" fill="#8b35d6"/>
+          <defs>
+            <linearGradient id="cg1" x1="0" y1="0" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#c8193a"/>
+              <stop offset="50%" stop-color="#d4a843"/>
+              <stop offset="100%" stop-color="#8b35d6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div id="header-info">
+      <div id="header-name">AURA-V</div>
+      <div id="header-sub">Volkaniya Kraliçesi · v12</div>
+      <div id="header-status">
+        <div id="status-dot"></div>
+        <span id="status-text">Çevrimiçi</span>
+      </div>
+    </div>
+    <div id="header-actions">
+      <div class="hbtn" onclick="clearChat()" title="Temizle">🗑</div>
+      <div class="hbtn" onclick="openSettings()" title="Ayarlar">⚙️</div>
+    </div>
+  </div>
+
+  <!-- BAĞLANTI BANNER -->
+  <div id="conn-banner">⚠ BAĞLANTI YOK — <span id="banner-url"></span></div>
+
+  <!-- MESAJLAR -->
+  <div id="messages"></div>
+
+  <!-- HIZLI KOMUTLAR -->
+  <div id="quick">
+    <div class="qbtn" onclick="quickSend('durum')">durum</div>
+    <div class="qbtn" onclick="quickSend('hafıza istatistik')">hafıza</div>
+    <div class="qbtn" onclick="quickSend('kritik bilgiler')">kritik bilgiler</div>
+    <div class="qbtn" onclick="quickSend('hata logu')">hata logu</div>
+    <div class="qbtn" onclick="quickSend('tünel durumu')">tünel</div>
+    <div class="qbtn" onclick="quickSend('yardım')">yardım</div>
+    <div class="qbtn" onclick="quickSend('öneri sun')">öneri sun</div>
+    <div class="qbtn" onclick="quickSend('evrim durumu')">evrim</div>
+    <div class="qbtn" onclick="konumGonder()">📍 konum</div>
+  </div>
+
+  <!-- INPUT -->
+  <div id="inputbar">
+    <div id="input-inner">
+      <textarea id="msg-input" placeholder="Kraliçene yaz, Mimar..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- AYARLAR MODAL -->
+<div id="settings-modal" onclick="closeSettingsOutside(event)">
+  <div id="settings-sheet">
+    <h3>// AYARLAR</h3>
+    <div class="setting-row">
+      <label>AURA-V Adresi</label>
+      <input type="text" id="api-url-input" placeholder="http://192.168.1.104:5000">
+    </div>
+    <button id="save-settings" onclick="saveSettings()">Kaydet</button>
+  </div>
+</div>
+
+<script>
+// ── AYARLAR ─────────────────────────────────────────────────────
+localStorage.removeItem('aura_url');
+let API_URL = window.location.origin;
+let isWaiting = false;
+
+window.addEventListener('focus', function() { isWaiting = false; setStatus(false); });
+
+function saveSettings() {
+  const val = document.getElementById('api-url-input').value.trim();
+  if (val) { API_URL = val.replace(/\/$/, ''); localStorage.setItem('aura_url', API_URL); }
+  closeSettings();
+  addMsg('aura', '✅ Adres güncellendi: ' + API_URL);
+}
+function openSettings() {
+  document.getElementById('api-url-input').value = API_URL;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+function closeSettingsOutside(e) { if (e.target === document.getElementById('settings-modal')) closeSettings(); }
+
+function now() {
+  return new Date().toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+}
+
+// Kraliçe tacı SVG (AURA mesajları için)
+const CROWN_Q = `<svg class="avatar-crown" viewBox="0 0 32 32" fill="none">
+  <path d="M4 24h24v3H4z" fill="url(#cq1)"/>
+  <path d="M4 24L8 10l8 8 8-12 4 14" fill="none" stroke="url(#cq1)" stroke-width="2.2" stroke-linejoin="round"/>
+  <circle cx="16" cy="8" r="2.5" fill="#d4a843"/>
+  <circle cx="28" cy="12" r="1.8" fill="#c8193a"/>
+  <circle cx="4" cy="14" r="1.8" fill="#8b35d6"/>
+  <defs><linearGradient id="cq1" x1="0" y1="0" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#c8193a"/><stop offset="50%" stop-color="#d4a843"/><stop offset="100%" stop-color="#8b35d6"/>
+  </linearGradient></defs>
+</svg>`;
+
+// Kral tacı SVG (Kullanıcı mesajları için)
+const CROWN_K = `<svg class="avatar-crown" viewBox="0 0 32 32" fill="none">
+  <path d="M4 23h24v3.5H4z" fill="url(#ck1)"/>
+  <path d="M4 23L7 9l9 7 9-7 3 14" fill="none" stroke="url(#ck1)" stroke-width="2.2" stroke-linejoin="round"/>
+  <polygon points="16,5 17.5,9.5 16,8 14.5,9.5" fill="#5577cc"/>
+  <circle cx="4" cy="11" r="2" fill="#336699"/>
+  <circle cx="28" cy="11" r="2" fill="#336699"/>
+  <defs><linearGradient id="ck1" x1="0" y1="0" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#336699"/><stop offset="50%" stop-color="#5599dd"/><stop offset="100%" stop-color="#336699"/>
+  </linearGradient></defs>
+</svg>`;
+
+function addMsg(type, text) {
+  const msgs = document.getElementById('messages');
+  text = text
+    .replace(/```[\s\S]*?```/g, m => '<code class="cmd">' + m.replace(/```/g,'').trim() + '</code>')
+    .replace(/`([^`]+)`/g, '<code class="cmd">$1</code>')
+    .replace(/\n/g, '<br>');
+
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + type;
+  const crownSvg = type === 'aura' ? CROWN_Q : CROWN_K;
+
+  row.innerHTML =
+    '<div class="msg-avatar">' + crownSvg + '</div>' +
+    '<div class="msg-wrap">' +
+      '<div class="bubble">' + text + '</div>' +
+      '<div class="msg-time">' + now() + '</div>' +
+    '</div>';
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row aura'; row.id = 'typing-row';
+  row.innerHTML =
+    '<div class="msg-avatar">' + CROWN_Q + '</div>' +
+    '<div class="typing-bubble"><span></span><span></span><span></span></div>';
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function hideTyping() { const el = document.getElementById('typing-row'); if (el) el.remove(); }
+
+function setStatus(thinking) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (thinking) { dot.className = 'thinking'; txt.textContent = 'Düşünüyor...'; }
+  else { dot.className = ''; txt.textContent = 'Çevrimiçi'; }
+}
+function showBanner(show) {
+  const b = document.getElementById('conn-banner');
+  document.getElementById('banner-url').textContent = API_URL;
+  b.classList.toggle('show', show);
+}
+
+async function sendMessage() {
+  if (isWaiting) return;
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = ''; input.style.height = '';
+  addMsg('user', text);
+  isWaiting = true; setStatus(true); showBanner(false);
+
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row aura'; row.id = 'stream-row';
+  row.innerHTML =
+    '<div class="msg-avatar">' + CROWN_Q + '</div>' +
+    '<div class="msg-wrap">' +
+      '<div class="bubble" id="stream-bubble"><span class="typing-cursor"></span></div>' +
+      '<div class="msg-time">' + now() + '</div>' +
+    '</div>';
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  let tamCevap = '';
+  try {
+    const res = await fetch(API_URL + '/api/stream', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ mesaj: text })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      for (const line of chunk.split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const data = JSON.parse(line.slice(6));
+          const bubble = document.getElementById('stream-bubble');
+          if (!bubble) continue;
+          if (data.token) {
+            tamCevap += data.token;
+            let g = tamCevap.replace(/\n/g,'<br>').replace(/`([^`]+)`/g,'<code class="cmd">$1</code>');
+            bubble.innerHTML = g + '<span class="typing-cursor"></span>';
+            msgs.scrollTop = msgs.scrollHeight;
+          }
+          if (data.done) {
+            let g = tamCevap.replace(/\n/g,'<br>').replace(/`([^`]+)`/g,'<code class="cmd">$1</code>');
+            bubble.innerHTML = g;
+          }
+        } catch(e) {}
+      }
+    }
+    showBanner(false);
+  } catch (err) {
+    const bubble = document.getElementById('stream-bubble');
+    if (bubble) bubble.innerHTML = '⚠ Bağlantı hatası<br><small>' + err.message + '</small>';
+    showBanner(true);
+  } finally {
+    const r = document.getElementById('stream-row'); if (r) r.removeAttribute('id');
+    const b = document.getElementById('stream-bubble'); if (b) b.removeAttribute('id');
+    isWaiting = false; setStatus(false);
+  }
+}
+
+function quickSend(cmd) { document.getElementById('msg-input').value = cmd; sendMessage(); }
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── YATAY SCROLL ──────────────────────────────────────────────
+(function() {
+  var el = document.getElementById('quick');
+  if (!el) return;
+  var isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', function(e) { isDown=true; el.classList.add('grabbing'); startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
+  el.addEventListener('mouseleave', function() { isDown=false; el.classList.remove('grabbing'); });
+  el.addEventListener('mouseup', function() { isDown=false; el.classList.remove('grabbing'); });
+  el.addEventListener('mousemove', function(e) { if (!isDown) return; e.preventDefault(); el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.5; });
+  el.addEventListener('wheel', function(e) { e.preventDefault(); el.scrollLeft+=e.deltaY*0.8; }, { passive:false });
+})();
+
+function konumGonder() {
+  if (!navigator.geolocation) { addMsg('aura', 'Tarayıcı konum desteklemiyor.'); return; }
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var lat = pos.coords.latitude.toFixed(6);
+      var lon = pos.coords.longitude.toFixed(6);
+      var acc = Math.round(pos.coords.accuracy);
+      var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
+      addMsg('user', 'Konumumu paylaşıyorum');
+      addMsg('aura', '📍 Konum alındı!<br>🗺️ <a href="' + url + '" target="_blank" style="color:var(--accent3)">Google Maps</a><br>📡 Doğruluk: ' + acc + 'm<br>📌 ' + lat + ', ' + lon);
+    },
+    function(err) { addMsg('aura', 'Konum alınamadı: ' + err.message); },
+    { enableHighAccuracy:true, timeout:10000 }
+  );
+}
+
+function clearChat() {
+  if (confirm('Sohbet geçmişi temizlensin mi?')) {
+    document.getElementById('messages').innerHTML = '';
+    addMsg('aura', '🗑️ Ekran temizlendi. AURA-V hafızası korunuyor.');
+  }
+}
+
+window.addEventListener('load', () => {
+  addMsg('aura',
+    'Merhaba Mimar Volkan 👑\n\nBağlantı adresi: <code class="cmd">' + API_URL + '</code>\n\n' +
+    'Farklı bir adres kullanmak istersen ⚙️ ayarlara dokun.'
+  );
+  document.getElementById('msg-input').focus();
+});
+</script>
+</body>
+</html>

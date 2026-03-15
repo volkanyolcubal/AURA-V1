@@ -1,0 +1,192 @@
+import os
+import re
+import json
+from datetime import datetime
+from typing import Dict, List, Tuple, Optional
+from collections import deque
+
+# ── VERİ ─────────────────────────────────────────────────────
+TAKIMLAR = [
+    "ANTALYASPOR","GAZİANTEP","KARAGÜMRÜK","FENERBAHÇE","SAMSUNSPOR",
+    "KAYSERİSPOR","TRABZONSPOR","RİZESPOR","KOCAELİSPOR","KONYASPOR",
+    "GÖZTEPE","ALANYASPOR","GALATASARAY","BAŞAKŞEHİR","KASIMPAŞA",
+    "EYÜPSPOR","GENÇLERBİRLİĞİ","BEŞİKTAŞ"
+]
+
+RESMI_PUANLAR = {
+    "GALATASARAY":    {"P": 61, "AV": 41, "G": 59},
+    "FENERBAHÇE":     {"P": 57, "AV": 32, "G": 57},
+    "TRABZONSPOR":    {"P": 54, "AV": 22, "G": 51},
+    "BEŞİKTAŞ":       {"P": 46, "AV": 15, "G": 45},
+    "BAŞAKŞEHİR":     {"P": 42, "AV": 17, "G": 44},
+    "GÖZTEPE":        {"P": 42, "AV": 10, "G": 28},
+    "KOCAELİSPOR":    {"P": 33, "AV": -3, "G": 22},
+    "SAMSUNSPOR":     {"P": 32, "AV": -3, "G": 27},
+    "RİZESPOR":       {"P": 30, "AV": -3, "G": 32},
+    "GAZİANTEP":      {"P": 30, "AV":-10, "G": 31},
+    "ALANYASPOR":     {"P": 27, "AV": -4, "G": 26},
+    "GENÇLERBİRLİĞİ":{"P": 25, "AV": -6, "G": 28},
+    "KONYASPOR":      {"P": 24, "AV":-10, "G": 28},
+    "ANTALYASPOR":    {"P": 24, "AV":-15, "G": 24},
+    "EYÜPSPOR":       {"P": 22, "AV":-17, "G": 19},
+    "KASIMPAŞA":      {"P": 21, "AV":-15, "G": 21},
+    "KAYSERİSPOR":    {"P": 20, "AV":-27, "G": 19},
+    "KARAGÜMRÜK":     {"P": 14, "AV":-24, "G": 22},
+}
+
+# ── FİKSTÜR (güncelle) ───────────────────────────────────────
+FIKSTUR = [
+    ("ANTALYASPOR",    "GAZİANTEP"),
+    ("KARAGÜMRÜK",     "FENERBAHÇE"),
+    ("KOCAELİSPOR",    "KONYASPOR"),
+    ("GÖZTEPE",        "ALANYASPOR"),
+    ("GALATASARAY",    "BAŞAKŞEHİR"),
+    ("TRABZONSPOR",    "RİZESPOR"),
+    ("KASIMPAŞA",      "EYÜPSPOR"),
+    ("GENÇLERBİRLİĞİ","BEŞİKTAŞ"),
+    ("SAMSUNSPOR",     "KAYSERİSPOR"),
+]
+
+EV_BONUSU  = 10.0
+RISK_ESIGI = 8.0
+
+# ── FORM ─────────────────────────────────────────────────────
+def form_oku() -> Dict[str, deque]:
+    formlar = {t: deque(maxlen=5) for t in TAKIMLAR}
+    if not os.path.exists("sonuclar.txt"):
+        return formlar
+    try:
+        with open("sonuclar.txt", "r", encoding="utf-8") as f:
+            icerik = f.read().upper()
+        maclar = re.findall(r"([A-ZÇŞĞÜÖİ]+)\s*(\d+)[-\s]*(\d+)\s*([A-ZÇŞĞÜÖİ]+)", icerik)
+        for ev, eg, dg, dep in maclar:
+            et = next((t for t in TAKIMLAR if t in ev), None)
+            dt = next((t for t in TAKIMLAR if t in dep), None)
+            if et and dt:
+                eg, dg = int(eg), int(dg)
+                formlar[et].append(3 if eg > dg else 1 if eg == dg else 0)
+                formlar[dt].append(0 if eg > dg else 1 if eg == dg else 3)
+    except Exception as e:
+        print(f"Form okuma hatası: {e}")
+    return formlar
+
+def form_puani(formlar: Dict, takim: str) -> float:
+    gecmis = list(formlar.get(takim, []))
+    if not gecmis:
+        return 5.0
+    toplam, agirlik = 0, 0
+    for i, p in enumerate(gecmis):
+        w = i + 1
+        toplam += p * w
+        agirlik += w
+    return (toplam / agirlik / 3) * 10
+
+# ── STATS ────────────────────────────────────────────────────
+def stats_yukle() -> Dict:
+    stats = {t: {"P": RESMI_PUANLAR[t]["P"], "G": RESMI_PUANLAR[t]["G"],
+                 "AV": RESMI_PUANLAR[t]["AV"]} for t in TAKIMLAR}
+    if not os.path.exists("sonuclar.txt"):
+        return stats
+    try:
+        with open("sonuclar.txt", "r", encoding="utf-8") as f:
+            icerik = f.read().upper()
+        maclar = re.findall(r"([A-ZÇŞĞÜÖİ]+)\s*(\d+)[-\s]*(\d+)\s*([A-ZÇŞĞÜÖİ]+)", icerik)
+        for ev, eg, dg, dep in maclar:
+            et = next((t for t in TAKIMLAR if t in ev), None)
+            dt = next((t for t in TAKIMLAR if t in dep), None)
+            if et and dt:
+                eg, dg = int(eg), int(dg)
+                stats[et]["G"]  += eg; stats[dt]["G"]  += dg
+                stats[et]["AV"] += eg - dg; stats[dt]["AV"] += dg - eg
+                if eg > dg:   stats[et]["P"] += 3
+                elif dg > eg: stats[dt]["P"] += 3
+                else:         stats[et]["P"] += 1; stats[dt]["P"] += 1
+    except Exception as e:
+        print(f"Stats okuma hatası: {e}")
+    return stats
+
+# ── ANALİZ ───────────────────────────────────────────────────
+def analiz(ev: str, dep: str, stats: Dict, formlar: Dict) -> Dict:
+    ef = form_puani(formlar, ev)
+    df = form_puani(formlar, dep)
+    ff = (ef - df) / 5
+
+    es = stats[ev]["P"]*1.8 + stats[ev]["G"]*1.2 + stats[ev]["AV"] + EV_BONUSU + ff*3
+    ds = stats[dep]["P"]*1.8 + stats[dep]["G"]*1.2 + stats[dep]["AV"] - ff*3
+
+    fark   = abs(es - ds)
+    toplam = es + ds
+    ev_yuz = (es / toplam * 100) if toplam > 0 else 50
+
+    if fark < RISK_ESIGI:
+        tahmin, guven = "X", "DÜŞÜK"
+    elif es > ds:
+        tahmin = "1"
+        guven = "ÇOK YÜKSEK" if fark>20 else "YÜKSEK" if fark>15 else "ORTA" if fark>10 else "DÜŞÜK"
+    else:
+        tahmin = "2"
+        guven = "ÇOK YÜKSEK" if fark>20 else "YÜKSEK" if fark>15 else "ORTA" if fark>10 else "DÜŞÜK"
+
+    return {
+        "ev": ev, "dep": dep,
+        "tahmin": tahmin, "guven": guven,
+        "ev_yuz": round(ev_yuz,1), "dep_yuz": round(100-ev_yuz,1),
+        "ev_p": stats[ev]["P"], "dep_p": stats[dep]["P"],
+        "ev_form": round(ef,1), "dep_form": round(df,1),
+        "fark": round(fark,1),
+    }
+
+GUVEN_ICON = {
+    "ÇOK YÜKSEK": "🔒",
+    "YÜKSEK":     "✅",
+    "ORTA":       "📊",
+    "DÜŞÜK":      "⚠️",
+}
+
+# ── KUPON ÇIKTI ──────────────────────────────────────────────
+def kupon_yazdir():
+    stats   = stats_yukle()
+    formlar = form_oku()
+    sonuclar = [analiz(ev, dep, stats, formlar) for ev, dep in FIKSTUR]
+
+    print()
+    print("━" * 62)
+    print(f"  🎯  VOLKANIYA — {datetime.now().strftime('%d.%m.%Y')} KUPON ANALİZİ")
+    print("━" * 62)
+    print(f"  {'MAÇ':<28} {'PUAN':>6}  {'FORM':>8}  {'GÜVEN':<14} {'TAH':>3}  {'%'}")
+    print("─" * 62)
+
+    for r in sonuclar:
+        mac   = f"{r['ev']} - {r['dep']}"
+        puan  = f"{r['ev_p']}-{r['dep_p']}"
+        form  = f"{r['ev_form']}-{r['dep_form']}"
+        icon  = GUVEN_ICON.get(r['guven'], "")
+        guven = f"{icon} {r['guven']}"
+        yuz   = f"%{r['ev_yuz']}" if r['tahmin']=="1" else f"%{r['dep_yuz']}" if r['tahmin']=="2" else "50-50"
+        print(f"  {mac:<28} {puan:>6}  {form:>8}  {guven:<14} {r['tahmin']:^3}  {yuz}")
+
+    print("─" * 62)
+
+    kupon = " / ".join(r["tahmin"] for r in sonuclar)
+    print(f"\n  📋 ÖNERİLEN KUPON  →  {kupon}")
+
+    # Sadece yüksek güvenli maçlar
+    yuksek = [r for r in sonuclar if r["guven"] in ("ÇOK YÜKSEK","YÜKSEK")]
+    if yuksek:
+        print(f"\n  🔒 YÜKSEK GÜVENLİ  →  ", end="")
+        for r in yuksek:
+            print(f"{r['ev']} {r['tahmin']}  ", end="")
+        print()
+
+    print()
+    print("━" * 62)
+
+    # JSON kaydet
+    with open("analiz_sonuc.json","w",encoding="utf-8") as f:
+        json.dump({"tarih": datetime.now().isoformat(), "kupon": sonuclar}, f, ensure_ascii=False, indent=2)
+    print("  💾 analiz_sonuc.json kaydedildi.")
+    print("━" * 62)
+    print()
+
+if __name__ == "__main__":
+    kupon_yazdir()

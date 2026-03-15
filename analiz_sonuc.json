@@ -1,0 +1,483 @@
+{
+  "tarih": "2026-03-11T21:24:33.767925",
+  "puan_durumu": {
+    "ANTALYASPOR": {
+      "puan": 35,
+      "gol": 37,
+      "av": -17,
+      "mac_sayisi": 33
+    },
+    "GAZİANTEP": {
+      "puan": 37,
+      "gol": 37,
+      "av": -12,
+      "mac_sayisi": 31
+    },
+    "KARAGÜMRÜK": {
+      "puan": 16,
+      "gol": 27,
+      "av": -34,
+      "mac_sayisi": 33
+    },
+    "FENERBAHÇE": {
+      "puan": 70,
+      "gol": 70,
+      "av": 40,
+      "mac_sayisi": 30
+    },
+    "SAMSUNSPOR": {
+      "puan": 43,
+      "gol": 36,
+      "av": 0,
+      "mac_sayisi": 31
+    },
+    "KAYSERİSPOR": {
+      "puan": 25,
+      "gol": 27,
+      "av": -42,
+      "mac_sayisi": 34
+    },
+    "TRABZONSPOR": {
+      "puan": 64,
+      "gol": 64,
+      "av": 25,
+      "mac_sayisi": 30
+    },
+    "RİZESPOR": {
+      "puan": 30,
+      "gol": 32,
+      "av": -3,
+      "mac_sayisi": 25
+    },
+    "KOCAELİSPOR": {
+      "puan": 53,
+      "gol": 35,
+      "av": 0,
+      "mac_sayisi": 37
+    },
+    "KONYASPOR": {
+      "puan": 32,
+      "gol": 37,
+      "av": -10,
+      "mac_sayisi": 32
+    },
+    "GÖZTEPE": {
+      "puan": 51,
+      "gol": 33,
+      "av": 12,
+      "mac_sayisi": 31
+    },
+    "ALANYASPOR": {
+      "puan": 34,
+      "gol": 32,
+      "av": -4,
+      "mac_sayisi": 31
+    },
+    "GALATASARAY": {
+      "puan": 76,
+      "gol": 73,
+      "av": 50,
+      "mac_sayisi": 32
+    },
+    "BAŞAKŞEHİR": {
+      "puan": 42,
+      "gol": 44,
+      "av": 17,
+      "mac_sayisi": 25
+    },
+    "KASIMPAŞA": {
+      "puan": 29,
+      "gol": 28,
+      "av": -17,
+      "mac_sayisi": 32
+    },
+    "EYÜPSPOR": {
+      "puan": 27,
+      "gol": 23,
+      "av": -21,
+      "mac_sayisi": 31
+    },
+    "GENÇLERBİRLİĞİ": {
+      "puan": 33,
+      "gol": 38,
+      "av": -8,
+      "mac_sayisi": 32
+    },
+    "BEŞİKTAŞ": {
+      "puan": 62,
+      "gol": 59,
+      "av": 24,
+      "mac_sayisi": 32
+    }
+  },
+  "form_durumu": {
+    "ANTALYASPOR": {
+      "takim": "ANTALYASPOR",
+      "form_puani": 5.777777777777779,
+      "sonuclar": "M-G-B-G-B",
+      "yorum": "📊 Dengeli"
+    },
+    "GAZİANTEP": {
+      "takim": "GAZİANTEP",
+      "form_puani": 3.111111111111111,
+      "sonuclar": "G-B-G-M-M",
+      "yorum": "📉 Düşüşte"
+    },
+    "KARAGÜMRÜK": {
+      "takim": "KARAGÜMRÜK",
+      "form_puani": 1.777777777777778,
+      "sonuclar": "M-M-B-M-B",
+      "yorum": "❄️ Buz gibi"
+    },
+    "FENERBAHÇE": {
+      "takim": "FENERBAHÇE",
+      "form_puani": 7.777777777777778,
+      "sonuclar": "G-G-G-G-B",
+      "yorum": "📈 Yükselişte"
+    },
+    "SAMSUNSPOR": {
+      "takim": "SAMSUNSPOR",
+      "form_puani": 3.7777777777777777,
+      "sonuclar": "G-G-B-M-B",
+      "yorum": "📉 Düşüşte"
+    },
+    "KAYSERİSPOR": {
+      "takim": "KAYSERİSPOR",
+      "form_puani": 1.3333333333333333,
+      "sonuclar": "M-G-M-M-M",
+      "yorum": "❄️ Buz gibi"
+    },
+    "TRABZONSPOR": {
+      "takim": "TRABZONSPOR",
+      "form_puani": 6.88888888888889,
+      "sonuclar": "G-M-G-B-G",
+      "yorum": "📈 Yükselişte"
+    },
+    "RİZESPOR": {
+      "takim": "RİZESPOR",
+      "form_puani": 5.0,
+      "sonuclar": "Yok",
+      "yorum": "📊 Dengeli"
+    },
+    "KOCAELİSPOR": {
+      "takim": "KOCAELİSPOR",
+      "form_puani": 6.666666666666666,
+      "sonuclar": "M-G-G-M-G",
+      "yorum": "📈 Yükselişte"
+    },
+    "KONYASPOR": {
+      "takim": "KONYASPOR",
+      "form_puani": 4.444444444444445,
+      "sonuclar": "M-M-B-G-B",
+      "yorum": "📊 Dengeli"
+    },
+    "GÖZTEPE": {
+      "takim": "GÖZTEPE",
+      "form_puani": 4.444444444444445,
+      "sonuclar": "B-B-M-G-B",
+      "yorum": "📊 Dengeli"
+    },
+    "ALANYASPOR": {
+      "takim": "ALANYASPOR",
+      "form_puani": 1.9999999999999998,
+      "sonuclar": "M-G-B-M-M",
+      "yorum": "❄️ Buz gibi"
+    },
+    "GALATASARAY": {
+      "takim": "GALATASARAY",
+      "form_puani": 5.333333333333333,
+      "sonuclar": "G-M-G-G-M",
+      "yorum": "📊 Dengeli"
+    },
+    "BAŞAKŞEHİR": {
+      "takim": "BAŞAKŞEHİR",
+      "form_puani": 5.0,
+      "sonuclar": "Yok",
+      "yorum": "📊 Dengeli"
+    },
+    "KASIMPAŞA": {
+      "takim": "KASIMPAŞA",
+      "form_puani": 3.9999999999999996,
+      "sonuclar": "M-M-G-B-B",
+      "yorum": "📉 Düşüşte"
+    },
+    "EYÜPSPOR": {
+      "takim": "EYÜPSPOR",
+      "form_puani": 2.444444444444444,
+      "sonuclar": "B-G-M-B-M",
+      "yorum": "📉 Düşüşte"
+    },
+    "GENÇLERBİRLİĞİ": {
+      "takim": "GENÇLERBİRLİĞİ",
+      "form_puani": 5.333333333333333,
+      "sonuclar": "M-G-B-M-G",
+      "yorum": "📊 Dengeli"
+    },
+    "BEŞİKTAŞ": {
+      "takim": "BEŞİKTAŞ",
+      "form_puani": 7.555555555555555,
+      "sonuclar": "M-G-G-B-G",
+      "yorum": "📈 Yükselişte"
+    }
+  },
+  "analizler": [
+    {
+      "ev": "ANTALYASPOR",
+      "dep": "GAZİANTEP",
+      "tahmin": "X",
+      "guven": "DÜŞÜK",
+      "ev_yuzde": 51.15346038114343,
+      "dep_yuzde": 48.84653961885657,
+      "fark": 4.599999999999994,
+      "aciklama": "⚠️ İki takım çok yakın (fark: 4.6)",
+      "ev_skor": 102.0,
+      "dep_skor": 97.4,
+      "ev_puan": 35,
+      "dep_puan": 37,
+      "ev_form": 5.777777777777779,
+      "dep_form": 3.111111111111111,
+      "ev_form_detay": {
+        "takim": "ANTALYASPOR",
+        "form_puani": 5.777777777777779,
+        "sonuclar": "M-G-B-G-B",
+        "yorum": "📊 Dengeli"
+      },
+      "dep_form_detay": {
+        "takim": "GAZİANTEP",
+        "form_puani": 3.111111111111111,
+        "sonuclar": "G-B-G-M-M",
+        "yorum": "📉 Düşüşte"
+      }
+    },
+    {
+      "ev": "KARAGÜMRÜK",
+      "dep": "FENERBAHÇE",
+      "tahmin": "2",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 11.6991643454039,
+      "dep_yuzde": 88.3008356545961,
+      "fark": 220.0,
+      "aciklama": "✈️ Deplasman + form: 7.8 - 1.8",
+      "ev_skor": 33.6,
+      "dep_skor": 253.6,
+      "ev_puan": 16,
+      "dep_puan": 70,
+      "ev_form": 1.777777777777778,
+      "dep_form": 7.777777777777778,
+      "ev_form_detay": {
+        "takim": "KARAGÜMRÜK",
+        "form_puani": 1.777777777777778,
+        "sonuclar": "M-M-B-M-B",
+        "yorum": "❄️ Buz gibi"
+      },
+      "dep_form_detay": {
+        "takim": "FENERBAHÇE",
+        "form_puani": 7.777777777777778,
+        "sonuclar": "G-G-G-G-B",
+        "yorum": "📈 Yükselişte"
+      }
+    },
+    {
+      "ev": "KOCAELİSPOR",
+      "dep": "KONYASPOR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 62.1275410749095,
+      "dep_yuzde": 37.8724589250905,
+      "fark": 58.06666666666668,
+      "aciklama": "🏠 Ev sahibi + form: 6.7 - 4.4",
+      "ev_skor": 148.73333333333335,
+      "dep_skor": 90.66666666666667,
+      "ev_puan": 53,
+      "dep_puan": 32,
+      "ev_form": 6.666666666666666,
+      "dep_form": 4.444444444444445,
+      "ev_form_detay": {
+        "takim": "KOCAELİSPOR",
+        "form_puani": 6.666666666666666,
+        "sonuclar": "M-G-G-M-G",
+        "yorum": "📈 Yükselişte"
+      },
+      "dep_form_detay": {
+        "takim": "KONYASPOR",
+        "form_puani": 4.444444444444445,
+        "sonuclar": "M-M-B-G-B",
+        "yorum": "📊 Dengeli"
+      }
+    },
+    {
+      "ev": "GÖZTEPE",
+      "dep": "ALANYASPOR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 62.19544846050871,
+      "dep_yuzde": 37.80455153949129,
+      "fark": 60.73333333333335,
+      "aciklama": "🏠 Ev sahibi + form: 4.4 - 2.0",
+      "ev_skor": 154.86666666666667,
+      "dep_skor": 94.13333333333333,
+      "ev_puan": 51,
+      "dep_puan": 34,
+      "ev_form": 4.444444444444445,
+      "dep_form": 1.9999999999999998,
+      "ev_form_detay": {
+        "takim": "GÖZTEPE",
+        "form_puani": 4.444444444444445,
+        "sonuclar": "B-B-M-G-B",
+        "yorum": "📊 Dengeli"
+      },
+      "dep_form_detay": {
+        "takim": "ALANYASPOR",
+        "form_puani": 1.9999999999999998,
+        "sonuclar": "M-G-B-M-M",
+        "yorum": "❄️ Buz gibi"
+      }
+    },
+    {
+      "ev": "GALATASARAY",
+      "dep": "BAŞAKŞEHİR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 66.21684504420661,
+      "dep_yuzde": 33.78315495579339,
+      "fark": 139.39999999999995,
+      "aciklama": "🏠 Ev sahibi + form: 5.3 - 5.0",
+      "ev_skor": 284.59999999999997,
+      "dep_skor": 145.20000000000002,
+      "ev_puan": 76,
+      "dep_puan": 42,
+      "ev_form": 5.333333333333333,
+      "dep_form": 5.0,
+      "ev_form_detay": {
+        "takim": "GALATASARAY",
+        "form_puani": 5.333333333333333,
+        "sonuclar": "G-M-G-G-M",
+        "yorum": "📊 Dengeli"
+      },
+      "dep_form_detay": {
+        "takim": "BAŞAKŞEHİR",
+        "form_puani": 5.0,
+        "sonuclar": "Yok",
+        "yorum": "📊 Dengeli"
+      }
+    },
+    {
+      "ev": "TRABZONSPOR",
+      "dep": "RİZESPOR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 72.10282343025706,
+      "dep_yuzde": 27.89717656974294,
+      "fark": 139.86666666666667,
+      "aciklama": "🏠 Ev sahibi + form: 6.9 - 5.0",
+      "ev_skor": 228.13333333333333,
+      "dep_skor": 88.26666666666667,
+      "ev_puan": 64,
+      "dep_puan": 30,
+      "ev_form": 6.88888888888889,
+      "dep_form": 5.0,
+      "ev_form_detay": {
+        "takim": "TRABZONSPOR",
+        "form_puani": 6.88888888888889,
+        "sonuclar": "G-M-G-B-G",
+        "yorum": "📈 Yükselişte"
+      },
+      "dep_form_detay": {
+        "takim": "RİZESPOR",
+        "form_puani": 5.0,
+        "sonuclar": "Yok",
+        "yorum": "📊 Dengeli"
+      }
+    },
+    {
+      "ev": "KASIMPAŞA",
+      "dep": "EYÜPSPOR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 59.50248756218905,
+      "dep_yuzde": 40.49751243781095,
+      "fark": 25.466666666666676,
+      "aciklama": "🏠 Ev sahibi + form: 4.0 - 2.4",
+      "ev_skor": 79.73333333333335,
+      "dep_skor": 54.26666666666667,
+      "ev_puan": 29,
+      "dep_puan": 27,
+      "ev_form": 3.9999999999999996,
+      "dep_form": 2.444444444444444,
+      "ev_form_detay": {
+        "takim": "KASIMPAŞA",
+        "form_puani": 3.9999999999999996,
+        "sonuclar": "M-M-G-B-B",
+        "yorum": "📉 Düşüşte"
+      },
+      "dep_form_detay": {
+        "takim": "EYÜPSPOR",
+        "form_puani": 2.444444444444444,
+        "sonuclar": "B-G-M-B-M",
+        "yorum": "📉 Düşüşte"
+      }
+    },
+    {
+      "ev": "GENÇLERBİRLİĞİ",
+      "dep": "BEŞİKTAŞ",
+      "tahmin": "2",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 33.71623058923633,
+      "dep_yuzde": 66.28376941076367,
+      "fark": 102.06666666666668,
+      "aciklama": "✈️ Deplasman + form: 7.6 - 5.3",
+      "ev_skor": 105.66666666666667,
+      "dep_skor": 207.73333333333335,
+      "ev_puan": 33,
+      "dep_puan": 62,
+      "ev_form": 5.333333333333333,
+      "dep_form": 7.555555555555555,
+      "ev_form_detay": {
+        "takim": "GENÇLERBİRLİĞİ",
+        "form_puani": 5.333333333333333,
+        "sonuclar": "M-G-B-M-G",
+        "yorum": "📊 Dengeli"
+      },
+      "dep_form_detay": {
+        "takim": "BEŞİKTAŞ",
+        "form_puani": 7.555555555555555,
+        "sonuclar": "M-G-G-B-G",
+        "yorum": "📈 Yükselişte"
+      }
+    },
+    {
+      "ev": "SAMSUNSPOR",
+      "dep": "KAYSERİSPOR",
+      "tahmin": "1",
+      "guven": "🔒 ÇOK YÜKSEK",
+      "ev_yuzde": 79.5582329317269,
+      "dep_yuzde": 20.441767068273094,
+      "fark": 98.13333333333333,
+      "aciklama": "🏠 Ev sahibi + form: 3.8 - 1.3",
+      "ev_skor": 132.06666666666666,
+      "dep_skor": 33.93333333333334,
+      "ev_puan": 43,
+      "dep_puan": 25,
+      "ev_form": 3.7777777777777777,
+      "dep_form": 1.3333333333333333,
+      "ev_form_detay": {
+        "takim": "SAMSUNSPOR",
+        "form_puani": 3.7777777777777777,
+        "sonuclar": "G-G-B-M-B",
+        "yorum": "📉 Düşüşte"
+      },
+      "dep_form_detay": {
+        "takim": "KAYSERİSPOR",
+        "form_puani": 1.3333333333333333,
+        "sonuclar": "M-G-M-M-M",
+        "yorum": "❄️ Buz gibi"
+      }
+    }
+  ],
+  "ozet": {
+    "toplam_mac": 9,
+    "ev": 6,
+    "dep": 2,
+    "x": 1
+  }
+}

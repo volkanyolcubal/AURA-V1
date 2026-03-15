@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AURA-V</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a12;
+    --surface: #111120;
+    --surface2: #181828;
+    --border: #ffffff0f;
+    --accent: #e94560;
+    --accent2: #7c5cbf;
+    --glow: #e9456033;
+    --text: #e8e8f0;
+    --text2: #8888aa;
+    --user-bg: #1e1040;
+    --aura-bg: #140e1e;
+    --input-bg: #16162a;
+    --radius: 18px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%; width: 100%;
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── ARKA PLAN DOKU ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 10%, #e9456018 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 10% 80%, #7c5cbf15 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, #ffffff04 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, #ffffff04 40px);
+    pointer-events: none;
+  }
+
+  #app {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    height: 100dvh; max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  #header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px 12px;
+    background: linear-gradient(180deg, #0d0d1a 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #avatar {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px; font-weight: 700; color: #fff;
+    box-shadow: 0 0 16px var(--glow);
+    flex-shrink: 0;
+  }
+
+  #header-info { flex: 1; min-width: 0; }
+  #header-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px; font-weight: 700;
+    color: var(--text); letter-spacing: 0.5px;
+  }
+  #header-status {
+    font-size: 12px; color: var(--text2);
+    display: flex; align-items: center; gap: 5px; margin-top: 1px;
+  }
+  #status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #2ecc71;
+    box-shadow: 0 0 6px #2ecc7188;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  #status-dot.thinking {
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--glow);
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  #header-actions { display: flex; gap: 8px; }
+  .hbtn {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text2); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .hbtn:active { transform: scale(0.92); background: var(--surface); }
+
+  /* ── MESAJLAR ── */
+  #messages {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 16px 14px 8px;
+    display: flex; flex-direction: column; gap: 10px;
+    scroll-behavior: smooth;
+  }
+  #messages::-webkit-scrollbar { width: 3px; }
+  #messages::-webkit-scrollbar-track { background: transparent; }
+  #messages::-webkit-scrollbar-thumb { background: #ffffff18; border-radius: 2px; }
+
+  .msg-row {
+    display: flex; gap: 8px; align-items: flex-end;
+    animation: fadeUp 0.25s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg-row.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+    font-family: 'Space Mono', monospace;
+  }
+  .msg-row.user .msg-avatar {
+    background: linear-gradient(135deg, #1e4060, #0f3060);
+  }
+
+  .bubble {
+    max-width: 80%; padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 14.5px; line-height: 1.55;
+    word-break: break-word;
+  }
+  .msg-row.aura .bubble {
+    background: var(--aura-bg);
+    border: 1px solid #ffffff0a;
+    border-bottom-left-radius: 5px;
+    color: var(--text);
+  }
+  .msg-row.user .bubble {
+    background: var(--user-bg);
+    border: 1px solid #7c5cbf30;
+    border-bottom-right-radius: 5px;
+    color: var(--text);
+  }
+
+  .bubble .cmd {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    background: #e9456015; padding: 2px 6px;
+    border-radius: 4px; display: inline-block;
+  }
+
+  .msg-time {
+    font-size: 10px; color: var(--text2);
+    margin-top: 3px; padding: 0 4px;
+    text-align: right;
+  }
+  .msg-row.aura .msg-time { text-align: left; }
+  .typing-cursor { display:inline-block; animation:blink 0.7s infinite; color:var(--accent); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* typing indicator */
+  .typing-bubble {
+    background: var(--aura-bg);
+    border: 1px solid #ffffff0a;
+    border-bottom-left-radius: 5px;
+    padding: 12px 16px;
+    display: flex; gap: 5px; align-items: center;
+  }
+  .typing-bubble span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text2);
+    animation: bounce 1.2s infinite;
+  }
+  .typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* ── HIZLI KOMUTLAR ── */
+  #quick {
+    padding: 6px 14px;
+    display: flex; gap: 7px; overflow-x: auto; flex-shrink: 0;
+  }
+  #quick::-webkit-scrollbar { display: none; }
+  #quick { cursor: grab; }
+  #quick.grabbing { cursor: grabbing; }
+  .qbtn {
+    flex-shrink: 0;
+    padding: 5px 12px; border-radius: 20px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text2); font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .qbtn:active { background: #e9456022; border-color: var(--accent); color: var(--accent); }
+
+  /* ── INPUT ALANI ── */
+  #inputbar {
+    padding: 10px 12px 16px;
+    background: linear-gradient(0deg, #0a0a12 60%, transparent 100%);
+    flex-shrink: 0;
+  }
+  #input-inner {
+    display: flex; align-items: flex-end; gap: 8px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 8px 8px 8px 16px;
+    transition: border-color 0.2s;
+  }
+  #input-inner:focus-within {
+    border-color: #e9456040;
+    box-shadow: 0 0 0 3px #e9456010;
+  }
+  #msg-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-size: 15px; font-family: 'DM Sans', sans-serif;
+    resize: none; max-height: 120px; line-height: 1.4;
+    padding: 2px 0;
+  }
+  #msg-input::placeholder { color: var(--text2); }
+  #send-btn {
+    width: 38px; height: 38px; border-radius: 14px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 12px var(--glow);
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  #send-btn:active { transform: scale(0.9); }
+  #send-btn svg { width: 17px; height: 17px; fill: #fff; }
+
+  /* ── BAĞLANTI HATASI BANNER ── */
+  #conn-banner {
+    display: none; padding: 8px 16px;
+    background: #e9456022; border-top: 1px solid #e9456044;
+    font-size: 12px; color: #e94560; text-align: center;
+    flex-shrink: 0;
+  }
+  #conn-banner.show { display: block; }
+
+  /* ── AYARLAR MODAL ── */
+  #settings-modal {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: #000000cc; backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  #settings-modal.open { display: flex; }
+  #settings-sheet {
+    width: 100%; max-width: 480px;
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    border: 1px solid var(--border);
+    padding: 24px 20px 36px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  #settings-sheet h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px; color: var(--accent);
+    margin-bottom: 20px; text-align: center;
+    letter-spacing: 1px;
+  }
+  .setting-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .setting-row label {
+    flex: 1; font-size: 14px; color: var(--text);
+  }
+  .setting-row input[type=text] {
+    flex: 1; background: var(--input-bg);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 8px 12px; color: var(--text);
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+  .setting-row input:focus { border-color: #e9456040; }
+  #save-settings {
+    width: 100%; margin-top: 20px;
+    padding: 13px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; color: #fff; font-size: 15px;
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  #save-settings:active { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div id="avatar">AV</div>
+    <div id="header-info">
+      <div id="header-name">AURA-V</div>
+      <div id="header-status">
+        <div id="status-dot"></div>
+        <span id="status-text">Çevrimiçi</span>
+      </div>
+    </div>
+    <div id="header-actions">
+      <div class="hbtn" onclick="clearChat()" title="Temizle">🗑</div>
+      <div class="hbtn" onclick="openSettings()" title="Ayarlar">⚙️</div>
+    </div>
+  </div>
+
+  <!-- BAĞLANTI BANNER -->
+  <div id="conn-banner">⚠️ AURA-V'ye bağlanılamıyor — <span id="banner-url"></span></div>
+
+  <!-- MESAJLAR -->
+  <div id="messages"></div>
+
+  <!-- HIZLI KOMUTLAR -->
+  <div id="quick">
+    <div class="qbtn" onclick="quickSend('durum')">durum</div>
+    <div class="qbtn" onclick="quickSend('hafıza istatistik')">hafıza</div>
+    <div class="qbtn" onclick="quickSend('kritik bilgiler')">kritik bilgiler</div>
+    <div class="qbtn" onclick="quickSend('hata logu')">hata logu</div>
+    <div class="qbtn" onclick="quickSend('tünel durumu')">tünel</div>
+    <div class="qbtn" onclick="quickSend('yardım')">yardım</div>
+    <div class="qbtn" onclick="quickSend('öneri sun')">öneri sun</div>
+    <div class="qbtn" onclick="quickSend('evrim durumu')">evrim</div>
+    <div class="qbtn" onclick="konumGonder()">📍 konum</div>
+  </div>
+
+  <!-- INPUT -->
+  <div id="inputbar">
+    <div id="input-inner">
+      <textarea id="msg-input" placeholder="Mesaj yaz..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- AYARLAR MODAL -->
+<div id="settings-modal" onclick="closeSettingsOutside(event)">
+  <div id="settings-sheet">
+    <h3>// AYARLAR</h3>
+    <div class="setting-row">
+      <label>AURA-V Adresi</label>
+      <input type="text" id="api-url-input" placeholder="http://192.168.1.104:5000">
+    </div>
+    <button id="save-settings" onclick="saveSettings()">Kaydet</button>
+  </div>
+</div>
+
+<script>
+// ── AYARLAR ─────────────────────────────────────────────────────
+localStorage.removeItem('aura_url');
+let API_URL = window.location.origin;
+let isWaiting = false;
+
+// Sayfa yüklenince sıfırla
+window.addEventListener('focus', function() { isWaiting = false; setStatus(false); });
+
+function saveSettings() {
+  const val = document.getElementById('api-url-input').value.trim();
+  if (val) {
+    API_URL = val.replace(/\/$/, '');
+    localStorage.setItem('aura_url', API_URL);
+  }
+  closeSettings();
+  addMsg('aura', `✅ Adres güncellendi: ${API_URL}`);
+}
+function openSettings() {
+  document.getElementById('api-url-input').value = API_URL;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+function closeSettingsOutside(e) {
+  if (e.target === document.getElementById('settings-modal')) closeSettings();
+}
+
+// ── ZAMAN ────────────────────────────────────────────────────────
+function now() {
+  return new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ── MESAJ EKLE ───────────────────────────────────────────────────
+function addMsg(type, text) {
+  const msgs = document.getElementById('messages');
+
+  // kod bloklarını <code> yap
+  text = text
+    .replace(/```[\s\S]*?```/g, m => `<code class="cmd">${m.replace(/```/g,'').trim()}</code>`)
+    .replace(/`([^`]+)`/g, '<code class="cmd">$1</code>')
+    .replace(/\n/g, '<br>');
+
+  const row = document.createElement('div');
+  row.className = `msg-row ${type}`;
+
+  const avatarTxt = type === 'aura' ? 'AV' : 'VK';
+  row.innerHTML = `
+    <div class="msg-avatar">${avatarTxt}</div>
+    <div>
+      <div class="bubble">${text}</div>
+      <div class="msg-time">${now()}</div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── TİPİNG GÖSTERGESİ ────────────────────────────────────────────
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row aura';
+  row.id = 'typing-row';
+  row.innerHTML = `
+    <div class="msg-avatar">AV</div>
+    <div class="typing-bubble">
+      <span></span><span></span><span></span>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function hideTyping() {
+  const el = document.getElementById('typing-row');
+  if (el) el.remove();
+}
+
+// ── DURUM ────────────────────────────────────────────────────────
+function setStatus(thinking) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (thinking) {
+    dot.className = 'thinking';
+    txt.textContent = 'Düşünüyor...';
+  } else {
+    dot.className = '';
+    txt.textContent = 'Çevrimiçi';
+  }
+}
+
+function showBanner(show) {
+  const b = document.getElementById('conn-banner');
+  document.getElementById('banner-url').textContent = API_URL;
+  b.classList.toggle('show', show);
+}
+
+// ── GÖNDER ───────────────────────────────────────────────────────
+async function sendMessage() {
+  if (isWaiting) return;
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = '';
+  addMsg('user', text);
+
+  isWaiting = true;
+  setStatus(true);
+  showBanner(false);
+
+  // Streaming bubble
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row aura';
+  row.id = 'stream-row';
+  row.innerHTML = `
+    <div class="msg-avatar">AV</div>
+    <div>
+      <div class="bubble" id="stream-bubble"><span class="typing-cursor">&#9611;</span></div>
+      <div class="msg-time">${now()}</div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  let tamCevap = '';
+
+  try {
+    const res = await fetch(`${API_URL}/api/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mesaj: text }),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const data = JSON.parse(line.slice(6));
+          const bubble = document.getElementById('stream-bubble');
+          if (!bubble) continue;
+          if (data.token) {
+            tamCevap += data.token;
+            let g = tamCevap.replace(/\n/g, '<br>').replace(/`([^`]+)`/g, '<code class="cmd">$1</code>');
+            bubble.innerHTML = g + '<span class="typing-cursor">&#9611;</span>';
+            msgs.scrollTop = msgs.scrollHeight;
+          }
+          if (data.done) {
+            let g = tamCevap.replace(/\n/g, '<br>').replace(/`([^`]+)`/g, '<code class="cmd">$1</code>');
+            bubble.innerHTML = g;
+          }
+        } catch(e) {}
+      }
+    }
+    showBanner(false);
+
+  } catch (err) {
+    const bubble = document.getElementById('stream-bubble');
+    if (bubble) bubble.innerHTML = `⚠️ Bağlantı hatası<br><small>${err.message}</small>`;
+    showBanner(true);
+  } finally {
+    const r = document.getElementById('stream-row');
+    if (r) r.removeAttribute('id');
+    const b = document.getElementById('stream-bubble');
+    if (b) b.removeAttribute('id');
+    isWaiting = false;
+    setStatus(false);
+  }
+}
+
+function quickSend(cmd) {
+  document.getElementById('msg-input').value = cmd;
+  sendMessage();
+}
+
+// ── INPUT ────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+
+
+// ── YATAY SCROLL (FARE) ──────────────────────────────────────
+(function() {
+  var el = document.getElementById('quick');
+  if (!el) return;
+  var isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', function(e) {
+    isDown = true; el.classList.add('grabbing');
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
+  });
+  el.addEventListener('mouseleave', function() { isDown = false; el.classList.remove('grabbing'); });
+  el.addEventListener('mouseup', function() { isDown = false; el.classList.remove('grabbing'); });
+  el.addEventListener('mousemove', function(e) {
+    if (!isDown) return;
+    e.preventDefault();
+    var x = e.pageX - el.offsetLeft;
+    el.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  });
+  // Fare tekerleği ile de kaydır
+  el.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    el.scrollLeft += e.deltaY * 0.8;
+  }, { passive: false });
+})();
+
+function konumGonder() {
+  if (!navigator.geolocation) {
+    addMsg('aura', 'Tarayici konum desteklemiyor.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var lat = pos.coords.latitude.toFixed(6);
+      var lon = pos.coords.longitude.toFixed(6);
+      var acc = Math.round(pos.coords.accuracy);
+      var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
+      addMsg('user', 'Konumumu paylaşıyorum');
+      addMsg('aura', '📍 Konum alındı!<br>🗺️ <a href="' + url + '" target="_blank" style="color:var(--accent)">Google Maps</a><br>📡 Doğruluk: ' + acc + 'm<br>📌 ' + lat + ', ' + lon);
+    },
+    function(err) {
+      addMsg('aura', 'Konum alinamadi: ' + err.message);
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+function clearChat() {
+  if (confirm('Sohbet geçmişi temizlensin mi?')) {
+    document.getElementById('messages').innerHTML = '';
+    addMsg('aura', '🗑️ Ekran temizlendi. AURA-V hafızası korunuyor.');
+  }
+}
+
+// ── BAŞLANGIÇ ────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  addMsg('aura',
+    `Merhaba Mimar Volkan 👋\n\nBağlantı adresi: <code class="cmd">${API_URL}</code>\n\n` +
+    `Farklı bir adres kullanmak istersen ⚙️ ayarlara dokun.`
+  );
+  document.getElementById('msg-input').focus();
+});
+</script>
+</body>
+</html>
