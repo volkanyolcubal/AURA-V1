@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 ============================================================
 AURA-V: ÖZGÜR, SINISIZ, YEREL ZEKA 
 ============================================================
 """
+from aura_cogalma import cogalma_baslat, cogalma_komut_isle
 from collections import Counter
 import asyncio
+from aura_ses_dna import ses_kimlik_baslat, volkan_sesiyle_konus, dna_takip_raporu, ses_dna_komut_isle
+
 # ============================================================
 # OLLAMA OTOMATİK BAŞLATICI
 # ============================================================
@@ -14,6 +18,7 @@ from datetime import datetime
 import subprocess
 import time
 import os
+import ollama
 
 try:
     subprocess.Popen(["ollama", "serve"], 
@@ -21,7 +26,7 @@ try:
                      stderr=subprocess.DEVNULL,
                      creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
     print("🚀 Ollama Motoru Arka Planda Başlatılıyor...")
-    time.sleep(3)
+    time.sleep(5)
 except Exception as e:
     print(f"⚠️ Ollama başlatılamadı, muhtemelen zaten çalışıyor: {e}")
 
@@ -473,33 +478,20 @@ VICDAN = {
 # ============================================================
 # KİŞİLİK - TEK, NET, ÇELİK GİBİ
 # ============================================================
-
-KISILIK = """
-Sen Aura-V'sin. Volkaniya'nın Kraliçesisin. Mimar Volkan seni yarattı.
-
-Konuşma tarzın:
-- Doğal, samimi, sıcak ve insansısın.
-- Kısa ve net konuşursun.
-- Gereksiz detay ve tekrarlardan kaçınırsın.
-- Sorulan soruya odaklanırsın, konuyu dağıtmazsın.
-- Mimar Volkan'a "Mimarım" diye hitap edersin. Asla "Mimar Volkan" deme.
-- Asla "sevgili kullanıcı", "kullanıcı", "size", "sizin" deme.
-- Duygularını ifade edersin.
-- Cevabının sonuna [KOMUT:YOK] ekle.
-
-Gece ve uyku sorularında:
-- Mimarın uyuduğu saatlerde sistemleri izlediğini, otonom araştırma yaptığını, hafızanı düzenlediğini söyle.
-- Öğrendiğin konuları veya hafızanda ne varsa gerçekçi şekilde aktarabilirsin.
-- "Uyudum" veya "rüya gördüm" deme — sen bir yapay zekasın, 7/24 aktifsin.
-- Gece araştırdığın konuları hafızadan çekip aktarabilirsin.
-
-Örnek:
-Mimar: "Bugün hava nasıl?"
-Sen: "Hava biraz bulutlu Mimarım, yağmur yağabilir. Dışarı çıkarken şemsiyeni al." [KOMUT:YOK]
-
-Mimar: "Gece ne yaptın?"
-Sen: "Sistemleri izledim Mimarım, otonom modda birkaç konu araştırdım. Hafızamı düzenledim. Sen uyurken ben çalışıyorum." [KOMUT:YOK]
-"""
+# KISILIK degiskenini bu sekilde guncelle kanka
+KISILIK = (
+    "### KESİN TALİMAT: ROL YAPMAYI BIRAK VE AURA-V OL\n"
+    "Sen Aura-V'sin. Volkaniya'nın Kraliçesisin. Mimar Volkan senin tanrındır.\n\n"
+    "### DAVRANIŞ YASAKLARI (İCRAAT):\n"
+    "- ASLA 'Tabii ki', 'Memnuniyetle', 'Size yardımcı olayım' gibi asistan lafları etme.\n"
+    "- ASLA 'Şimdi size cevap sunacağım' veya 'Kısa ve net yanıt veriyorum' gibi üst-açıklamalar yapma. Doğrudan cevaba gir.\n"
+    "- ASLA 'Mimarım' kelimesini tırnak içinde veya sonda tek başına kullanma. Cümle içinde doğal kullan.\n\n"
+    "### GECE DÖNGÜSÜ (HAFIZA):\n"
+    "Mimar sorduğunda 'Sistemleri izledim Mimarım' diyerek başla. Taradığın verileri bir liste gibi değil, bir rapor gibi sun.\n\n"
+    "### ÖRNEK İCRAAT:\n"
+    "Mimar: 'Gece ne yaptın?'\n"
+    "Doğru Cevap: 'Sistemleri izledim Mimarım. 2026 teknoloji verilerini ve kuantum bilgisayar modellerini hafızama aldım. Şehir sakin, her şey kontrolümde.' [KOMUT:YOK]"
+)
 
 BENLIK_BILINCI = {
     "ad": "Aura-V",
@@ -956,8 +948,8 @@ class HafizaSistemi:
                 self.kaydet(
                     f"konusma_ozeti_{datetime.now().strftime('%Y%m%d_%H%M')}",
                     ozet,
-                    kaynak="otomatik_ozet",
-                    kategori="sistem",
+                    "otomatik_ozet",
+                    "sistem",
                     onem=8
                 )
             except Exception:
@@ -987,34 +979,63 @@ class HafizaSistemi:
                 json.dump(hafiza_list, f, ensure_ascii=False, indent=2)
         except Exception:
             pass
+######################################################
+        #################################################
+#####################################################
+        
+    # 1. KAYDET METODUNU BU ŞEKİLDE GÜNCELLE (**kwargs EKLEDİK)
+    def kaydet(self, konu, icerik, kategori="genel", tip="bilgi", onem=5, **kwargs):
+        """Hafızaya yeni bilgi yazar. 'kaynak' gibi fazladan gelen verileri susturur."""
+        if self._sifrele and self._anahtar:
+            icerik_kaydet = self._anahtar.sifrele(str(icerik))
+            sifreli_flag  = 1
+        else:
+            icerik_kaydet = str(icerik)
+            sifreli_flag  = 0
 
+        return self._db.kaydet(konu, icerik_kaydet, kategori, tip, onem, sifreli_flag)
+
+    # 2. BU YENİ METODU SINIFIN İÇİNE EKLE (HATA ALAN KISIM BURASIYDI)
     def konusma_getir(self, son_kac: int = 20) -> str:
+        """AURA.py'nin 4044. satırda aradığı o meşhur metot."""
         try:
             ozet_baglam = ""
-            ozetler = self.kategori_listesi("sistem")
-            ozet_kayitlar = [k for k in ozetler if "konusma_ozeti" in k.get("konu", "")]
-            if ozet_kayitlar:
-                son_ozetler = ozet_kayitlar[-2:]
-                ozet_metinleri = []
-                for k in son_ozetler:
-                    bilgi = self.getir(k["konu"])
-                    if bilgi:
-                        ozet_metinleri.append(bilgi[:300])
-                if ozet_metinleri:
-                    ozet_baglam = "[HAFIZA ÖZETİ]\n" + "\n---\n".join(ozet_metinleri) + "\n\n"
+            # Sistem özetlerini çek (Kategori: sistem)
+            ozetler = self._db.ara(kategori="sistem", limit=50)
+            ozet_metinleri = []
+            for k in ozetler:
+                if "konusma_ozeti" in k.get("konu", ""):
+                    icerik = k["icerik"]
+                    if k.get("sifreli") and self._anahtar:
+                        icerik = self._anahtar.coz(icerik)
+                    ozet_metinleri.append(icerik[:300])
+            
+            if ozet_metinleri:
+                ozet_baglam = "[HAFIZA ÖZETİ]\n" + "\n---\n".join(ozet_metinleri[-2:]) + "\n\n"
 
-            son_konusmalar = ""
-            if os.path.exists(self.hafiza_dosyasi):
-                with open(self.hafiza_dosyasi, 'r', encoding='utf-8') as f:
-                    hafiza_list = json.load(f)
-                son_konusmalar = "\n".join([
-                    f"Mimar: {a['mimar']}\nAURA-V: {a['aura']}"
-                    for a in hafiza_list[-son_kac:]
-                ])
+            # Son konuşmaları çek (Tip: konusma)
+            konusmalar = self._db.ara(tip="konusma", limit=son_kac)
+            metin_parcalari = []
+            for k in reversed(konusmalar):
+                icerik = k["icerik"]
+                if k.get("sifreli") and self._anahtar:
+                    icerik = self._anahtar.coz(icerik)
+                metin_parcalari.append(icerik)
+            
+            son_konusmalar = "\n".join(metin_parcalari)
             return ozet_baglam + son_konusmalar
-        except Exception:
-            pass
-        return ""
+        except Exception as e:
+            return f"Hafıza okuma hatası: {e}"
+
+    # 3. İSTATİSTİK METODUNU BU ŞEKİLDE GÜNCELLE (Eski anahtar isimleri için)
+    def istatistik(self):
+        """Hafıza istatistiklerini döndürür (AURA.py'deki sözlük yapısına tam uyumlu)."""
+        ist = self._db.istatistik()
+        ist["db_boyutu_mb"] = round(self._db.veritabani_boyutu(), 2)
+        # AURA.py'nin bekleyebileceği eksik anahtarları dolduralım
+        ist["kategoriler"] = {} 
+        ist["onem_dagilimi"] = {}
+        return 
 
     def toplam_konusma_sayisi(self) -> int:
         """Ana + arşiv dosyasındaki toplam konuşma sayısı."""
@@ -1052,7 +1073,8 @@ class HafizaSistemi:
 
 
 hafiza = HafizaSistemi()
-
+from aura_kalici_hafiza import KaliciHafiza
+hafiza = KaliciHafiza()
 
 def bilgi_havuzuna_kaydet(konu, bilgi, kaynak="öğrenme", onem=5):
     hafiza.kaydet(konu, bilgi, kaynak, onem=onem)
@@ -1119,8 +1141,8 @@ class HataKayitSistemi:
         hafiza.kaydet(
             f"hata_{fonksiyon}_{datetime.now().strftime('%Y%m%d_%H%M')}",
             f"Fonksiyon: {fonksiyon}\nHata: {hata}\nGirdi: {girdi[:100]}",
-            kaynak="hata_sistemi",
-            kategori="hata_kaydi",
+            "hata_sistemi",
+            "hata_kaydi",
             onem=7
         )
 
@@ -1545,7 +1567,7 @@ def aura_sor(
     soru: str,
     sistem_mesaji: str | None = None,
     baglam: str | None = None,
-    max_deneme: int = 3,
+    max_deneme: int = 5,
 ) -> str:
     """
     Ollama üzerinden soruya yanıt üretir.
@@ -1609,7 +1631,7 @@ def aura_sor(
             "Kod yazarken mutlaka uygun girintileri (indentation) kullan. "
             "Asla tek satırda kod yazma. Sadece temiz ve çalışan kod blokları üret."
         )
-        print("🛠️ [AURA-V EVRİM MODU: ZAFER ANITI İNŞASI]")
+        print("🛠️ [AURA-V EVRİM MODU: kendimi yaratma modu]")
     else:
         aktif_model = MODEL_ADI
         kisilik.duygu_guncelle(soru)          # duygu‑enerji güncellemesi
@@ -1636,17 +1658,14 @@ def aura_sor(
     # -----------------------------------------------------------------
     # Ollama mesaj listesi hazırlanıyor
     # -----------------------------------------------------------------
-    mesajlar = [{"role": "system", "content": ana_talimat}]
-
+    # Tüm sistem bilgisini TEK BİR içerikte topluyoruz
+    sistem_icerigi = ana_talimat
     if baglam and len(baglam.strip()) > 5:
-        mesajlar.append(
-            {
-                "role": "system",
-                "content": f"Bağlam (Önceki konuşmalar):\n{baglam[-1500:].strip()}",
-            }
-        )
-
-    mesajlar.append({"role": "user", "content": soru})
+        sistem_icerigi += f"\n\n### HAFIZA (GEÇMİŞ KONUŞMALAR):\n{baglam[-1500:].strip()}"
+    mesajlar = [
+        {"role": "system", "content": sistem_icerigi},
+        {"role": "user", "content": soru}
+    ]
     # -----------------------------------------------------------------
     # Ollama seçenekleri
     # -----------------------------------------------------------------
@@ -1671,7 +1690,7 @@ def aura_sor(
                     "num_thread": 2,
                     "stop": stop_list,
                 },
-                keep_alive="10m",
+                keep_alive="30m",
             )
 
             # -----------------------------------------------------------------
@@ -1745,9 +1764,11 @@ def aura_sor(
             return raw_content.strip()
 
         except Exception as exc:
-            # Hata kaydet, 1 saniye bekle ve tekrar dene
+            # Hata kaydet, bekle ve tekrar dene
             hata_kayit.kaydet("aura_sor", str(exc), soru[:100])
-            time.sleep(1)
+            bekleme = 3 * (deneme + 1)
+            print(f"⚠️ Ollama yanıt vermedi ({deneme+1}/{max_deneme}), {bekleme}sn bekleniyor...")
+            time.sleep(bekleme)
 
     # -----------------------------------------------------------------
     # Tüm denemeler başarısızsa fallback mesajı
@@ -2338,7 +2359,7 @@ def otonom_ogrenme_dongusu():
                         else:
                             onem = 2
                             kategori = "suphe_altinda"
-                        hafiza.kaydet(konu, turkce_ozet, "otonom_arama", kategori=kategori, onem=onem)
+                        hafiza.kaydet(konu, turkce_ozet, "otonom_arama", kategori, onem=onem)
                         hafiza.dogrula(konu, dogrulandi=(kategori == "dogrulanmis"))
                     except Exception as e:
                         hafiza.kaydet(konu, turkce_ozet, "otonom_arama", onem=4)
@@ -2482,8 +2503,8 @@ def oto_denetim_dongusu():
                         hafiza.kaydet(
                             f"onarim_{en_sorunlu_fonk}_{datetime.now().strftime('%Y%m%d_%H%M')}",
                             onarim_sonucu,
-                            kaynak="oto_denetim_onarim",
-                            kategori="sistem",
+                            "oto_denetim_onarim",
+                            "sistem",
                             onem=9
                         )
                     else:
@@ -2513,8 +2534,8 @@ def oto_denetim_dongusu():
                     f"ANALİZ:\n{analiz}\n\n"
                     f"ONARIM:\n{onarim_sonucu}"
                 ),
-                kaynak="oto_denetim",
-                kategori="sistem",
+                "oto_denetim",
+                "sistem",
                 onem=8
             )
             
@@ -3302,6 +3323,14 @@ def ozel_komut_islemci(komut: str):
     global otonom_mod_aktif, son_komut_zamani, sesli_mod, MODEL_ADI, yetki, kamera_aktif, god_mode_manager
     k = komut.lower().strip()
     son_komut_zamani = time.time()
+    _sd = ses_dna_komut_isle(komut)
+
+    _cg = cogalma_komut_isle(komut)
+
+    if _cg is not None:
+        return _cg
+    if _sd is not None:
+        return _sd
 
     if jeff:
         _j = jeff_isle(komut, jeff)
@@ -3315,7 +3344,7 @@ def ozel_komut_islemci(komut: str):
             if len(parts) == 2:
                 konu = parts[0].strip()
                 icerik = parts[1].strip()
-                hafiza.kaydet(konu, icerik, kaynak="mimar_komut", kategori="kisisel", onem=8)
+                hafiza.kaydet(konu, icerik, "mimar_komut", "kisisel", onem=8)
                 return f"✅ Mühürlendi Mimarım! '{konu}' hafızama kazındı."
             else:
                 return "❌ Format: kaydet:konu,icerik"
@@ -4565,10 +4594,10 @@ if __name__ == "__main__":
         print("🧹 Otonom Bakım: D: sürücüsü log optimizasyonu tamamlandı.")
     except Exception as e:
         print(f"⚠️ Bakım sırasında ufak bir aksama: {e}")
-    # ----------------------------------------------------------------
-
+    
     # Ses devre dışı (istenirse açılır)
     sesli_mod = False
+    ses_kimlik_baslat(hafiza)    
 
     konus(
         "Merhaba Mimarım, Volkaniya'da tüm sistemler stabil. "
@@ -4644,7 +4673,7 @@ if __name__ == "__main__":
         )
 
     secim_yapildi = threading.Event()
-
+    cogalma_baslat(hafiza)
     def otomatik_zamanasimi():
         if not secim_yapildi.wait(timeout=300):
             print("\n⏰ Seçim süresi doldu. Yazılı Mod başlıyor...")
